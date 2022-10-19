@@ -1,5 +1,6 @@
 const express = require('express');
 const uuid = require('uuid').v4;
+const db = require('./db.js');
 
 const app = express();
 
@@ -7,36 +8,26 @@ const app = express();
 app.use(express.urlencoded ({ extended:false }));
 app.use(express.json());
 
-//database
-const db = [
-  { id: 1, author: 'John Doe', text: 'This company is worth every coin!' },
-  {
-      id: 2,
-      author: 'Amanda Doe',
-      text: 'They really know how to make you happy.',
-  },
-];
-
 //endpoints
 
 app.get('/testimonials', (req, res) => {
-  res.json(db)
+  res.json(db.testimonials)
 })
 
 app.get('/testimonials/:id', (req, res) => {
-  res.json(db.find((data) => data.id == req.params.id));
+  res.json(db.testimonials.find((testimonial) => testimonial.id == req.params.id));
 })
 
 //random not working
 app.get('/testimontials/random', (req, res) => {
-  res.json(db[Math.floor(Math.random() * (db.length) +1)]);
+  res.json(db.testimonials[Math.floor(Math.random() * (db.testimonials.length))]);
 });
 
 app.post('/testimonials', (req, res) => {
   const { author, text } = req.body;
   const id = uuid();
   const newTestimonial = { id: id, author, text };
-  db.push(newTestimonial);
+  db.testimonial.push(newTestimonial);
   res.json({ message: 'ok!' });
 });
 
@@ -45,7 +36,7 @@ app.put(
   (req, res) => {
       const { author, text } = req.body;
       const id = +req.params.id;
-      const testimonial = db.find((testimonial) => testimonial.id === id);
+      const testimonial = db.testimonial.find((testimonial) => testimonial.id === id);
       testimonial.author = author;
       testimonial.text = text;
       res.json({ message: 'ok!' });    },
@@ -58,8 +49,8 @@ app.delete(
   '/testimonials/:id',
   (req, res) => {
       const id = +req.params.id;
-      db.splice(
-          db.findIndex((testimonial) => testimonial.id === id),
+      db.testimonial.splice(
+          db.testimonial.findIndex((testimonial) => testimonial.id === id),
           1
       );
       res.json({ message: 'Testimonial deleted' });
