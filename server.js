@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 
 const app = express();
 
@@ -8,8 +9,12 @@ app.use(express.json());
 
 // import routes
 const testimonialsRoutes = require('./routes/testimonials.routes');
+const concertsRoutes = require('./routes/concerts.routes.js');
+const seatsRoutes = require('./routes/seats.routes.js');
 
 app.use('/api/', testimonialsRoutes); 
+app.use('/api/', concertsRoutes);
+app.use('/api/', seatsRoutes);
 
 app.use((req, res) => {
   res.status(404).send('404 not found...');
