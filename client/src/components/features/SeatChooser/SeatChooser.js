@@ -15,7 +15,7 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
 
     timer = setInterval(() => {
       dispatch(loadSeatsRequest());
-    }, 120000); // refresh every 2 minutes
+    }, 120000); 
     return () => clearInterval(timer);
   }, [dispatch]);
 
