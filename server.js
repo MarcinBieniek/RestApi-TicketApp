@@ -1,11 +1,13 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 
 const app = express();
 
 // add middleware
 app.use(express.urlencoded ({ extended:false }));
 app.use(express.json());
+app.use(cors());
 
 // import routes
 const testimonialsRoutes = require('./routes/testimonials.routes');

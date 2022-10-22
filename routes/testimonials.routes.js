@@ -9,12 +9,12 @@ router.route('/testimonials').get((req, res) => {
   res.json(db.testimonials);
 });
 
-router.route('/testimonials/:id').get((req, res) => {
-    res.json(db.testimonials.find((data) => data.id == req.params.id));
-});
-
 router.route('/testimonials/random').get((req, res) => {
     res.json(db.testimonials[Math.floor(Math.random() * (db.testimonials.length))]);
+});
+
+router.route('/testimonials/:id').get((req, res) => {
+    res.json(db.testimonials.find((data) => data.id == req.params.id));
 });
 
 router.route('/testimonials').post((req, res) => {
@@ -28,8 +28,10 @@ router.route('/testimonials').post((req, res) => {
 router.route('/testimonials/:id').put(
     (req, res) => {
         const { author, text } = req.body;
+        console.log('body', req.body)
         const id = req.params.id;
-        const testimonial = db.testimonials.find((data) => data.id === id);
+        const testimonial = db.testimonials.find((data) => data.id === Number(id));
+        console.log('testimonial', testimonial)
         testimonial.author = author;
         testimonial.text = text;
         res.json({ message: 'ok!' });
