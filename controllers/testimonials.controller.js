@@ -1,4 +1,5 @@
 const Testimonial = require('../models/testimonial.model');
+var sanitize = require('mongo-sanitize');
 
 // route 1 - get all - mongoose added
 exports.getAll = async (req, res) => {
@@ -37,6 +38,7 @@ exports.getById = async (req, res) => {
 };
 
 // route 4 - post - mongoose added
+
 exports.addDoc = async (req, res) => {
     try {  
       const { author, text } = req.body;

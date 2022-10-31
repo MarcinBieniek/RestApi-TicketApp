@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const socket = require('socket.io');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const mongoose = require('mongoose');
 
@@ -16,6 +17,11 @@ app.use((req, res, next) => {
 app.use(express.urlencoded ({ extended:false }));
 app.use(express.json());
 app.use(cors());
+app.use(
+  mongoSanitize({
+    replaceWith: '_',
+  }),
+);
 
 // import routes
 const testimonialsRoutes = require('./routes/testimonials.routes');
@@ -37,7 +43,14 @@ app.use((req, res) => {
 })
 
 // connects our backend code with the database
-mongoose.connect('mongodb+srv://MarcinEden:MarciNgim@cluster0.tgryn8j.mongodb.net/NewWaveDB');
+const NODE_ENV = process.env.NODE_ENV;
+let dbUri = '';
+
+if(NODE_ENV === 'production') dbUri = 'url to remote db';
+else if(NODE_ENV === 'test') dbUri = 'mongodb://localhost:27017/companyDBtest';
+else dbUri = 'mongodb://localhost:27017/companyDB';
+
+mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
@@ -54,3 +67,5 @@ const io = socket(server);
 io.on('connection', (socket) => {
   console.log('New socket is on!');
 });
+
+module.exports = server;
